@@ -2,10 +2,9 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <string.h>
+#include "defs.h"
 
 int match(char *s1, char *s2) {
-
-
         while( *s1 != '\0' && *s2 != 0 && *s1 == *s2 ){
                 s1++;
                 s2++;
@@ -23,10 +22,9 @@ void goodbye(char *str) {
         exit(1);
 }
 
-
 int main(){
   int welcomeSocket, newSocket;
-  char buffer[1024];
+  char buffer[BUFFER_SIZE];
   struct sockaddr_in serverAddr;
   struct sockaddr_storage serverStorage;
   socklen_t addr_size;
@@ -34,21 +32,19 @@ int main(){
   char *good ="Welcome to The Machine!\n";
   char *evil = "Invalid identity, exiting!\n";
 
-
-  char buffer1[1024];
-  char buffer2[1024];
-  char buffer3[1024];
-  char buffer4[1024];
+  char buffer1[BUFFER_SIZE];
+  char buffer2[BUFFER_SIZE];
+  char buffer3[BUFFER_SIZE];
+  char buffer4[BUFFER_SIZE];
 
   /*---- Create the socket. The three arguments are: ----*/
-  /* 1) Internet domain 2) Stream socket 3) Default protocol (TCP in this case) */
   welcomeSocket = socket(PF_INET, SOCK_STREAM, 0);
 
   /*---- Configure settings of the server address struct ----*/
   /* Address family = Internet */
   serverAddr.sin_family = AF_INET;
   /* Set port number, using htons function to use proper byte order */
-  serverAddr.sin_port = htons(10551);
+  serverAddr.sin_port = htons(CIS551_PORT);
   /* Set IP address to localhost */
   serverAddr.sin_addr.s_addr = inet_addr("158.130.109.233");
   /* Set all bits of the padding field to 0 */
@@ -70,7 +66,7 @@ int main(){
   /*---- Send message to the socket of the incoming connection ----*/
 
   // Receive the start of the conversation message from client
-  recv(newSocket, buffer, 1024, 0);
+  recv(newSocket, buffer, BUFFER_SIZE, 0);
   printf("Data received: %s",buffer);
 
   // Ask the client to send the username
@@ -79,7 +75,7 @@ int main(){
   printf("Asked the client to send the username \n");
 
   // Receive the username from the client 
-  recv(newSocket, buffer2, 1024, 0);
+  recv(newSocket, buffer2, BUFFER_SIZE, 0);
   printf("The username received from the client is: %s", buffer2);
 
   // Ask the client to send the password
@@ -88,7 +84,7 @@ int main(){
   printf("Asked the client to send the password \n");
 
   // Receive the password from the client
-  recv(newSocket, buffer4, 1024, 0);
+  recv(newSocket, buffer4, BUFFER_SIZE, 0);
   printf("The password received from the client is: %s", buffer4);
 
   // Username -> buffer2 and Password -> buffer4
