@@ -6,8 +6,8 @@
  * a=mary had a little lamb
  * They are retrieved by used of their name prepended by a '$' character
  * presented to the prompt ('>'), e.g.,
- * >$b
- * this is a string
+ * >$a
+ * mary had a little lamb
  * >
  *
  * The client passes the strings input to a server, the IP address of
@@ -83,36 +83,22 @@ main( int argc, char *argv[] )
    * the user, as appropriate. Lots of opportunity to generalize
    * this primitive user interface...
    */
-  for( putchar('>');
-       (fgets( buf, BUFSIZE, stdin ) != NULL );
-       putchar('>'))
-    {
-      if( fputs( buf, server_request ) == EOF )
-	{
-	  perror( "write failure to associative memory at server" );
-	}
-      fflush( server_request );  /* buffering everywhere.... */
-
-      /* user wants value */
-      if( (find_equals( buf ) == NULL) && (find_dollar( buf ) != NULL) )
-	{
-	  if( fgets( buf, BUFSIZE, server_reply ) == NULL )
-	    {
-	      perror( "read failure from associative memory at server");
-	    }
-	  fputs( buf, stdout );
-	}
-
-      /* user sets value */
-      if( (find_equals( buf ) != NULL) && (find_dollar( buf ) == NULL) )
-	{
-	  if( fgets( buf, BUFSIZE, server_reply ) == NULL )
-	    {
-	      perror( "read failure from associative memory at server");
-	    }
-	}
+  if( fgets( buf, BUFSIZE, server_reply ) == NULL ) {
+        perror( "read failure from associative memory at server");
+  }
+  fprintf(stderr,"%s",buf);
+  
+  for( putchar('>'); (fgets( buf, BUFSIZE, stdin ) != NULL ); putchar('>')) {
+    if( fputs( buf, server_request ) == EOF ) {
+      perror( "write failure to associative memory at server" );
     }
-
+    fflush( server_request );  /* buffering everywhere.... */
+    
+    if( fgets( buf, BUFSIZE, server_reply ) == NULL ) {
+        perror( "read failure from associative memory at server");
+    }
+    fprintf(stderr,"%s",buf);
+  }
   /* shut things down */
   fclose( server_request );
   fclose( server_reply );

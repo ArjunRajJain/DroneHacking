@@ -63,7 +63,8 @@ main( argc, argv, env )
 
 void
 service( int fd ) {
-    bool inChoosingOptions = true;
+    bool justStarted = true;
+    bool inChoosingOptions = false;
     bool inInsertUsername = false;
     bool inInsertPassword = false;
     char *ptr, *name, *pass;
@@ -74,26 +75,28 @@ service( int fd ) {
 
     /* interface between socket and stdio */
     client_request = fdopen( fd, "r" );
-    
     if( client_request == (FILE *) NULL ) {
         perror( "fdopen of client_request" );
         exit( 1 );
     }
 
     client_reply = fdopen( fd, "w" );
-  
     if( client_reply == (FILE *) NULL ) {
         perror( "fdopen of client_reply" );
         exit( 1 );
     }
 
-    fputs( "Enter 1 to Insert New User\n Enter 2 to Update Password for Existing User", client_reply );
+    fprintf(stderr,"%s","New Client Connected");
+    
+    fputs( "Enter 1 to Insert New User or Enter 2 to Update Password for Existing User\n", client_reply );
     fflush(client_reply);
+    justStarted = false;
+    inChoosingOptions = true;
+    
 
     while( fgets( buf, BUFSIZE, client_request ) != NULL ){
         fix_tcl( buf ); /* hack to interface with tcl scripting language */
-        fprintf(stderr,"%s\n",buf);
-        // printf
+        fprintf(stderr,"%s",buf);
 
         if(inChoosingOptions) {
             if ((ptr = find_1( buf )) != (char *) NULL) {
@@ -102,10 +105,15 @@ service( int fd ) {
                 inChoosingOptions = false;
                 inInsertUsername = true;
             }
+            else {
+              fputs( "Enter 1 to Insert New User or Enter 2 to Update Password for Existing User:\n", client_reply );
+              fflush( client_reply );
+            }
         }
 
         else if(inInsertUsername){
-            name = strsave( buf );
+
+            name = strsave(strtok(buf, "\n"));
             fputs( "Enter Password:\n", client_reply );
             fflush( client_reply );
             inInsertUsername = false;
@@ -113,58 +121,17 @@ service( int fd ) {
         }
 
         else if (inInsertPassword) {
-            pass = strsave( buf );
-            fputs( "Username and Password Saved:\n", client_reply );
+            pass = strsave(buf);
+            fputs( "Username and Password Saved\n", client_reply );
             fflush( client_reply );
             insert( name, pass );
             inInsertUsername = false;
             inInsertPassword = false;
             inChoosingOptions = true;
-            fputs( "Enter 1 to Insert New User\n Enter 2 to Update Password for Existing User", client_reply );
-            fflush(client_reply);
-        }
-    
-
-          /* Create new username,password */
-        // if( (ptr = find_equals( buf )) != (char *) NULL ) {
-        //     fprintf(stderr,"in equals");
-        //     #ifdef EBUG
-        //         fprintf( stderr, "ASSIGN: %s\n", buf );
-        //         dump( ptr );
-        //     #endif
-        //     *ptr = EOS;
-        //     name = strsave( buf ); 
-        //     value = strsave( ++ptr );
-        //     fprintf(stderr,"%s\n",name);
-        //     fprintf(stderr,"%s\n",value);
-        //     insert( name, value );
-        //     fputs( "\n", client_reply );
-        //     fflush( client_reply );
-        //     #ifdef EBUG
-        //         fprintf( stderr, "REPLY: <>\n" );
-        //     #endif
-        // }
-
-        /* Find username,password */ 
-        // else if ((ptr = find_dollar( buf )) != (char *) NULL) {
-        //     char *reply, *find_newline; 
-        //     /* removes trailing newline if found */ 
-        //     if( (reply = lookup( ++ptr )) != NULL ) {
-        //         fputs( reply, client_reply );
-        //         fflush( client_reply );
-        //     }
-        //     else {
-        //         fputs( "No such user\n", client_reply );
-        //         fflush( client_reply );
-        //     }
-        // }
-
-        else {
-            #ifdef EBUG
-                fprintf( stderr, "GARBAGE\n" );
-            #endif
         }
     }
+
+    fprintf(stderr,"%s","Client Disconnected");
     return;
 }
 
