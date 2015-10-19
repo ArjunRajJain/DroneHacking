@@ -3,6 +3,7 @@
 #include <netinet/in.h>
 #include <string.h>
 #include "defs.h"
+#include <stdlib.h>
 
 int main(int argc, char *argv[]){
 
@@ -31,6 +32,11 @@ int main(int argc, char *argv[]){
 
   /*---- Create the socket ----*/
   clientSocket = socket(PF_INET, SOCK_STREAM, 0);
+  if (clientSocket < 0)
+      {
+      perror("ERROR opening socket");
+      exit(1);
+      }
 
   /*---- Configure settings of the server address struct ----*/
   /* Address family = Internet */
@@ -46,6 +52,8 @@ int main(int argc, char *argv[]){
   addr_size = sizeof serverAddr;
   connect(clientSocket, (struct sockaddr *) &serverAddr, addr_size);
 
+while(1)
+  {
   strcpy(buffer,"Welcome to badbuf communication over TCP\n");
   send(clientSocket,buffer,sizeof(buffer),0);
   
@@ -64,5 +72,6 @@ int main(int argc, char *argv[]){
          send(clientSocket,buffer4,sizeof(buffer4),0);
   
   return 0;
-}
+  } // end of while loop
+} // end of main loop
 
