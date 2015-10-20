@@ -25,6 +25,8 @@
 
 #define find_equals(_s) strchr(_s, EQUALS)
 #define find_dollar(_s) strchr(_s, DOLLAR)
+#define find_1(_s) strchr(_s, '1')
+#define find_2(_s) strchr(_s, '2')
 
 void *malloc();
 

@@ -1,7 +1,6 @@
 #include "demo.h"
 #include "defs.h"
-#define find_1(_s) strchr(_s, '1')
-#define find_2(_s) strchr(_s, '2')
+
 typedef enum { false, true } bool;
 struct sym_list Head;   /* head of singly-linked list */
 
@@ -65,13 +64,14 @@ main( argc, argv, env )
 
 void
 service( int fd ) {
-    void save();
+    void save(), restore();
     bool justStarted = true;
     bool inChoosingOptions = false;
     bool inInsertUsername = false;
     bool inInsertPassword = false;
     bool inAuthUsername = false;
     bool inAuthPassword = false;
+    bool inInsertNewPassword = false;
     
     char *ptr, *name, *pass, *newPass;
 
@@ -112,7 +112,7 @@ service( int fd ) {
                 inInsertUsername = true;
             }
             else if ((ptr = find_2( buf )) != (char *) NULL) {
-                fputs( "Authenticate User:\n", client_reply );
+	        fputs( "Authenticate Username:\n", client_reply );
                 fflush( client_reply );
                 inChoosingOptions = false;
                 inAuthUsername = true;
@@ -124,7 +124,6 @@ service( int fd ) {
         }
 
         else if(inInsertUsername){
-
             name = strsave(strtok(buf, "\n"));
             fputs( "Enter New Password:\n", client_reply );
             fflush( client_reply );
@@ -144,7 +143,7 @@ service( int fd ) {
         }
 
         else if(inAuthUsername){
-            name = strsave(buf); //#2
+            name = strsave(strtok(buf, "\n"));
             fputs( "Enter Current Password:\n", client_reply );
             fflush( client_reply );
             inAuthUsername = false;
@@ -152,20 +151,23 @@ service( int fd ) {
         }
 
         else if (inAuthPassword) {
-	    pass = strsave(buf); //#3
-	    printf("This is %s\n", name);
-	    printf("This is %s\n", pass);
-	    printf("You are here\n");
-	    char* s = lookup(name);
-	    printf("You are there\n");
-	    printf("Function result is %s \n", s);
-	    //fprintf("%s\n", lookup(name));
-	    if(lookup(name) == pass){ //#1
+	    pass = strsave(buf); 
+	    
+	    restore(DATABASE);
+	    
+	    if((lookup(name) != NULL) && (strcmp(lookup(name), pass) == 0)){ 
+	      fputs( "User Authenticated. Press Enter.\n", client_reply );
+	      fflush( client_reply );
+
+              inInsertUsername = false;
+              inInsertPassword = false;
               inAuthPassword = false;
-              inInsertPassword = true;
+              inAuthUsername = false;
+	      inChoosingOptions = false;
+	      inInsertNewPassword= true;	      
 	    }
 	    else{
-	      fputs( "Incorrect Password. Returning to Options menu. Press Enter.\n", client_reply );
+	      fputs( "Incorrect User or Password. Returning to Options menu. Press Enter.\n", client_reply );
 	      fflush( client_reply );
               inInsertUsername = false;
               inInsertPassword = false;
@@ -174,6 +176,14 @@ service( int fd ) {
 	      inChoosingOptions = true;	      
 	    }	  
         }
+        
+            else if(inInsertNewPassword){
+            fputs( "Enter New Password:\n", client_reply );
+            fflush( client_reply );
+            inInsertUsername = false;
+            inInsertPassword = true;
+        }
+
     }
 
     fprintf(stderr,"%s","Client Disconnected");
