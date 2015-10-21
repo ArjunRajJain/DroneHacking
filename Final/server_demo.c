@@ -62,7 +62,7 @@ void service( int fd ) {
 			exit( 1 );
 		}
 
-		fprintf(stderr,"%s","New Client Connected");
+		fprintf(stderr,"%s","New Client Connected \n");
 		    
 		fputs( "Enter 1 to Insert New User or Enter 2 to Update Password for Existing User. \n", client_reply );
 		fflush(client_reply);

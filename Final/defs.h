@@ -1,11 +1,9 @@
-#define BUFSIZE 4096
-#define MAXLINE 200
-#define MAX_SYMS 64
+#define BUFSIZE 4096				
 
 #define PROMPT '>'
 #define DOLLAR '$'
 #define EQUALS '='
-#define NEWLINE '\n'
+//#define NEWLINE '\n'
 #define EOS '\0'
 
 #define TRUE 1

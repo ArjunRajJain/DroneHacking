@@ -8,12 +8,23 @@ int main( int argc, char *argv[] )
     FILE *server_request, *server_reply;
     extern int close();
 
+    char *user_name;
+    char *user_password;
+
     /* Check if invoked correctly */
-    if( argc != 2 )
+    if( argc != 4 )
       {
         fprintf(stderr, "Usage: %s <IP address>\n", argv[0] );
         exit ( 1 );
       }
+    
+    // Take in the name as an argument
+    user_name = argv[2];
+    printf("The entered name is:  %s\n", user_name);
+
+    // Take in the password as an argument
+    user_password = argv[3];
+    printf("The entered password is:  %s\n", user_password);
   
     /* Open up a TCP/IP socket */
     if( (sockfd = socket(AF_INET, SOCK_STREAM, 0 )) < 0 )
