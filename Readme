@@ -1,0 +1,30 @@
+Assignment 2 - Phase 1
+
+In this assignment, we have implemented a simple server-client architecture which authenticates a user and then gives him the permission to perform further actions. 
+In this part, the AR Drone acts as the server and the user's PC is the client. The client interacts with the drone using TCP/IP communication with the help of packets. The client first authenticates itself before logging into the drone. The server which runs on the drone has a database file which stores the list of the valid users with their usernames and password. Thus, the program is built using the badbuf.c of the previous assignment as a base here. The server always scans the database table/file for the incoming user before allowing it the permission to log in onto the drone or server. 
+
+Once the user is successful, the server provides a list of 2 options to the client. The client can choose any one option and go ahead. The two options are as follows:
+1. Add a new user to the table
+2. Update/Modify the password of the existing user
+
+The client has the authority to change only his own password.
+
+Working:
+
+- The communication takes place with the help of TCP/IP packets
+
+- The server always run on the IP address of 192.168.1.1 and the client has to connect to the server using this IP address. The port number used for the communication is 10551. This has been defined on both the server and the client sides.
+
+- The necessary steps for creating a socket include, defining the IP packet type, here-SOCK_STREAM for IP packets, defining the port for the communication, defining the IP address to be connected to, binding and listening on the socket for the connection and accepting calls to maintain the communication between hosts.
+
+The Code Structure is as follows:
+
+SERVER SIDE:
+CLIENT SIDE:
+
+In order to run the program, the following procedure is to be followed:
+- make
+- ./server
+- ./ client 192.168.1.1 user password
+
+ 
