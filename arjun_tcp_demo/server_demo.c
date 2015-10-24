@@ -126,11 +126,11 @@ void service( int fd ) {
             fflush( client_reply );
             inAuthPassword = false;
             if(userLoggedIn == false) {
-              inInsertNewPassword= true;
+              inChoosingOptions = true;
               userLoggedIn = true;   
             }
             else {
-              inChoosingOptions = true;
+              inInsertNewPassword= true;
             }
         }
         else if(userLoggedIn){
