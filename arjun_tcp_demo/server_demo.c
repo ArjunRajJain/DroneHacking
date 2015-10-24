@@ -3,33 +3,8 @@
 typedef enum { false, true } bool;
 struct sym_list Head;   /* head of singly-linked list */
 
-/*
- * Daemon provides an interactive associative memory
- * via a socket-based interface. Clients either set
- * values with an assignment statement or access
- * values with a $ preface. When the value is
- * accessed, we write it onto the client's socket.
- * We currently do this as an iterative server for
- * reasons of queuing and serialization. If the
- * server is made concurrent, the database will have
- * to have serialized access and copy control - this
- * is not necessary yet.
- *
- * Program notes:
- * Parsing is done
- * with find_dollar() and find_equals().
- * Storage management is carried out by the insert()
- * and lookup() routines.
- * save() and restore() routines added to
- * use disk storage to maintain memory across
- * invocations.
- * Iterative server code is copied from Stevens, "UNIX Network
- * Programming: Networking APIs: Sockets and XTI," p. 101
- *
- */
 
-int
-main( argc, argv, env )
+int main( argc, argv, env )
     int argc;
     char *argv[], *env[];
 {
@@ -53,21 +28,22 @@ main( argc, argv, env )
       exit( ERR_ACCEPT );
     }
 
-    // restore( DATABASE );
     service(connection_fd);
-    save( DATABASE );
-
     close( connection_fd );
     }
 }
 
-void
-service( int fd ) {
-    bool justStarted = true;
+void service( int fd ) {
+    void save(), restore();
     bool inChoosingOptions = false;
     bool inInsertUsername = false;
     bool inInsertPassword = false;
-    char *ptr, *name, *pass;
+    bool inAuthUsername = true;
+    bool inAuthPassword = false;
+    bool inInsertNewPassword = false;
+    bool userLoggedIn = false;
+
+    char *ptr, *name, *pass, *newPass;
 
     FILE *client_request, *client_reply, *fdopen();
     char buf[BUFSIZE];
@@ -88,48 +64,103 @@ service( int fd ) {
 
     fprintf(stderr,"%s","New Client Connected");
     
-    fputs( "Enter 1 to Insert New User or Enter 2 to Update Password for Existing User\n", client_reply );
+    fputs( "Enter Username to Start: \n", client_reply );
     fflush(client_reply);
-    justStarted = false;
-    inChoosingOptions = true;
     
 
     while( fgets( buf, BUFSIZE, client_request ) != NULL ){
-        fix_tcl( buf ); /* hack to interface with tcl scripting language */
-        fprintf(stderr,"%s",buf);
+    fix_tcl( buf ); /* hack to interface with tcl scripting language */
+    fprintf(stderr,"%s",buf);
 
-        if(inChoosingOptions) {
-            if ((ptr = find_1( buf )) != (char *) NULL) {
-                fputs( "Enter Username:\n", client_reply );
-                fflush( client_reply );
-                inChoosingOptions = false;
-                inInsertUsername = true;
-            }
-            else {
-              fputs( "Enter 1 to Insert New User or Enter 2 to Update Password for Existing User:\n", client_reply );
+  
+      if(inChoosingOptions) {
+        if ((ptr = find_1( buf )) != (char *) NULL) {
+          fputs( "Enter Username:\n", client_reply );
+          fflush( client_reply );
+          inChoosingOptions = false;
+          inInsertUsername = true;
+        }
+        else if ((ptr = find_2( buf )) != (char *) NULL) {
+          fputs( "Authenticate Username:\n", client_reply );
+          fflush( client_reply );
+          inChoosingOptions = false;
+          inAuthUsername = true;
+        }
+        else{
+              fputs( "Enter 1 to Insert New User or Enter 2 to Update Password for Existing User. \n", client_reply );
               fflush( client_reply );
             }
-        }
+      } // inCHoosingOptions loop ends here
 
-        else if(inInsertUsername){
+      else if(inInsertUsername){
+        name = strsave(strtok(buf, "\n"));
+        fputs( "Enter New Password:\n", client_reply );
+        fflush( client_reply );
+        inInsertUsername = false;
+        inInsertPassword = true;
+      } // inInsertUsername loop ends here
 
-            name = strsave(strtok(buf, "\n"));
-            fputs( "Enter Password:\n", client_reply );
+      else if (inInsertPassword) {
+        pass = strsave(buf);
+        fputs( "Username and Password Saved.  Press Enter.\n", client_reply );
+        fflush( client_reply );
+        insert( name, pass );
+        save(DATABASE);
+        inInsertPassword = false;
+        inChoosingOptions = true;
+      } // inInsertPassword loop ends here
+
+      else if(inAuthUsername){
+        name = strsave(strtok(buf, "\n"));
+        fputs( "Enter Current Password:\n", client_reply );
+        fflush( client_reply );
+        inAuthUsername = false;
+        inAuthPassword = true;
+      } // inAuthUsername loop ends here
+
+      else if (inAuthPassword) {
+        pass = strsave(buf); 
+        restore(DATABASE);
+        if((lookup(name) != NULL) && (strcmp(lookup(name), pass) == 0)){ 
+            fputs( "User Authenticated. Press Enter.\n", client_reply );
             fflush( client_reply );
-            inInsertUsername = false;
-            inInsertPassword = true;
+            inAuthPassword = false;
+            if(userLoggedIn == false) {
+              inInsertNewPassword= true;
+              userLoggedIn = true;   
+            }
+            else {
+              inChoosingOptions = true;
+            }
         }
-
-        else if (inInsertPassword) {
-            pass = strsave(buf);
-            fputs( "Username and Password Saved\n", client_reply );
+        else if(userLoggedIn){
+            fputs( "Incorrect User or Password. Returning to Options menu. Press Enter.\n", client_reply );
             fflush( client_reply );
-            insert( name, pass );
             inInsertUsername = false;
             inInsertPassword = false;
-            inChoosingOptions = true;
+            inAuthPassword = false;
+            inAuthUsername = false;
+            inChoosingOptions = true;       
         }
-    }
+        else {
+            fputs( "Incorrect User or Password. Enter Username Again:\n", client_reply );
+            fflush( client_reply );
+            inInsertUsername = false;
+            inInsertPassword = false;
+            inAuthPassword = false;
+            inAuthUsername = true;
+            inChoosingOptions = false;    
+        }   
+      } // inAuthUsername loop ends here
+      
+      else if(inInsertNewPassword){
+        fputs( "Enter New Password:\n", client_reply );
+        fflush( client_reply );
+        inInsertUsername = false;
+        inInsertPassword = true;
+      } // inInsertPassword loop ends here
+
+    } // end of while loop
 
     fprintf(stderr,"%s","Client Disconnected");
     return;
@@ -177,16 +208,4 @@ fix_tcl( char *buf )
     *ptr = EOS;
   return;
 
-}
- 
-void
-dump( char *buf )
-{
-  fprintf( stderr, "strlen(buf)=%d, buf=<%s>\n", (int) strlen(buf), buf );
-  {
-    int i;
-
-    for( i=0; buf[i] != EOS; i++ )
-      fprintf( stderr, "%d:%c:%x\n", i, buf[i], buf[i] );
-  }
 }

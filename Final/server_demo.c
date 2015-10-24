@@ -66,8 +66,6 @@ void service( int fd ) {
 		    
 		fputs( "Enter 1 to Insert New User or Enter 2 to Update Password for Existing User. \n", client_reply );
 		fflush(client_reply);
-		justStarted = false;
-		inChoosingOptions = true;  
 
 		while( fgets( buf, BUFSIZE, client_request ) != NULL ){
 		fix_tcl( buf ); /* hack to interface with tcl scripting language */
