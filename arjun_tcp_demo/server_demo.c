@@ -40,8 +40,10 @@ void service( int fd ) {
     bool inInsertPassword = false;
     bool inAuthUsername = true;
     bool inAuthPassword = false;
+    bool inUpdatePassword = false;
     bool inInsertNewPassword = false;
     bool userLoggedIn = false;
+    bool inUpdate = false;
 
     char *ptr, *name, *pass, *newPass, *username;
 
@@ -81,10 +83,10 @@ void service( int fd ) {
           inInsertUsername = true;
         }
         else if ((ptr = find_2( buf )) != (char *) NULL) {
-          fputs( "Authenticate Username:\n", client_reply );
+          fputs( "Enter Current Password:\n", client_reply );
           fflush( client_reply );
           inChoosingOptions = false;
-          inAuthUsername = true;
+          inUpdate = true;
         }
         else{
               fputs( "Enter 1 to Insert New User or Enter 2 to Update Password for Existing User. \n", client_reply );
@@ -94,16 +96,10 @@ void service( int fd ) {
 
       else if(inInsertUsername){
         name = strsave(strtok(buf, "\n"));
-        if(strcmp(name, username)) {
-          fputs( "Enter New Password:\n", client_reply );
-          fflush( client_reply );
-          inInsertUsername = false;
-          inInsertPassword = true;
-        }
-        else {
-          fputs( "Enter your own username:\n", client_reply );
-          fflush( client_reply );
-        }
+        fputs( "Enter New Password:\n", client_reply );
+        fflush( client_reply );
+        inInsertUsername = false;
+        inInsertPassword = true;
       } // inInsertUsername loop ends here
 
       else if (inInsertPassword) {
@@ -116,6 +112,31 @@ void service( int fd ) {
         inChoosingOptions = true;
       } // inInsertPassword loop ends here
 
+      else if (inUpdatePassword) {
+        pass = strsave(buf);
+        fputs( "Password Updated. Press Enter.\n", client_reply );
+        fflush( client_reply );
+        insert(username, pass );
+        save(DATABASE);
+        inUpdatePassword = false;
+        inChoosingOptions = true;
+      } // inInsertPassword loop ends here
+
+      else if(inUpdate){
+        pass = strsave(buf);
+        restore(DATABASE);
+        if((lookup(username) != NULL) && (strcmp(lookup(username), pass) == 0)){ 
+          fputs( "User Authenticated. Enter New Password.\n", client_reply );
+          fflush( client_reply );
+          inUpdate = false;
+          inUpdatePassword = true;
+        }
+        else {
+          fputs( "Incorrect Password, Enter Current Password Again: \n", client_reply );
+          fflush( client_reply );
+        }
+      } // inAuth
+
       else if(inAuthUsername){
         username = strsave(strtok(buf, "\n"));
         fputs( "Enter Current Password:\n", client_reply );
@@ -127,7 +148,7 @@ void service( int fd ) {
       else if (inAuthPassword) {
         pass = strsave(buf); 
         restore(DATABASE);
-        if((lookup(name) != NULL) && (strcmp(lookup(name), pass) == 0)){ 
+        if((lookup(username) != NULL) && (strcmp(lookup(username), pass) == 0)){ 
             fputs( "User Authenticated. Press Enter.\n", client_reply );
             fflush( client_reply );
             inAuthPassword = false;
