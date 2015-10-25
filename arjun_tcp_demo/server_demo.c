@@ -43,7 +43,7 @@ void service( int fd ) {
     bool inInsertNewPassword = false;
     bool userLoggedIn = false;
 
-    char *ptr, *name, *pass, *newPass;
+    char *ptr, *name, *pass, *newPass, *username;
 
     FILE *client_request, *client_reply, *fdopen();
     char buf[BUFSIZE];
@@ -94,10 +94,16 @@ void service( int fd ) {
 
       else if(inInsertUsername){
         name = strsave(strtok(buf, "\n"));
-        fputs( "Enter New Password:\n", client_reply );
-        fflush( client_reply );
-        inInsertUsername = false;
-        inInsertPassword = true;
+        if(strcmp(name, username)) {
+          fputs( "Enter New Password:\n", client_reply );
+          fflush( client_reply );
+          inInsertUsername = false;
+          inInsertPassword = true;
+        }
+        else {
+          fputs( "Enter your own username:\n", client_reply );
+          fflush( client_reply );
+        }
       } // inInsertUsername loop ends here
 
       else if (inInsertPassword) {
@@ -111,7 +117,7 @@ void service( int fd ) {
       } // inInsertPassword loop ends here
 
       else if(inAuthUsername){
-        name = strsave(strtok(buf, "\n"));
+        username = strsave(strtok(buf, "\n"));
         fputs( "Enter Current Password:\n", client_reply );
         fflush( client_reply );
         inAuthUsername = false;
