@@ -1,9 +1,9 @@
 #
-# Makefile for the client server communication using the drone as the server
+# Makefile for networked associative memory system
 #
 CC = gcc
 #add -DEBUG to CFLAGS to get lots of debugging!
-CFLAGS = -g 
+CFLAGS = -g
 CFILES = client_demo.c server_demo.c util.c
 OFILES = server_demo.o util.o
 HFILES = demo.h defs.h symlist.h symbol.h

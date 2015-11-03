@@ -6,8 +6,7 @@
  * pair when given "name"; NULL if not found.
  */
 
-char *
-lookup( name )
+char *lookup( name )
 char *name;
 {
   struct sym_list *sp;
@@ -63,8 +62,7 @@ char *name, *value;
  * character string pointed to by "str".
  */
 
-char *
-strsave( str )
+char *strsave( str )
 char *str;
 {
 	char *p;
@@ -79,8 +77,7 @@ char *str;
  * provides a pointer to a new sym_list structure
  */
  
-struct sym_list *
-new_sym()
+struct sym_list *new_sym()
 {
   struct sym_list *p;
 
@@ -99,8 +96,7 @@ new_sym()
  * Head which has a v_name entry matching name.
  */
 
-struct sym_list *
-s_lookup( name )
+struct sym_list *s_lookup( name )
 char *name;
 {
   struct sym_list *sp;
@@ -157,8 +153,7 @@ char *file;
  *    fashion as the input to the associative memory system.
  */
 
-void
-restore( file )
+void restore( file )
 char *file;
 {
   FILE *db;

@@ -1,9 +1,11 @@
-#define BUFSIZE 4096				
+#define BUFSIZE 4096
+#define MAXLINE 200
+#define MAX_SYMS 64
 
 #define PROMPT '>'
 #define DOLLAR '$'
 #define EQUALS '='
-//#define NEWLINE '\n'
+#define NEWLINE '\n'
 #define EOS '\0'
 
 #define TRUE 1
@@ -21,10 +23,10 @@
 #define ERR_LISTEN 3
 #define ERR_ACCEPT 4
 
-#define find_equals(_s) strchr(_s, EQUALS)
-#define find_dollar(_s) strchr(_s, DOLLAR)
 #define find_1(_s) strchr(_s, '1')
 #define find_2(_s) strchr(_s, '2')
+#define find_equals(_s) strchr(_s, EQUALS)
+#define find_dollar(_s) strchr(_s, DOLLAR)
 
 void *malloc();
 
