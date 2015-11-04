@@ -11,8 +11,8 @@ LIBES =
 #LIBES =
 
 server_demo: $(OFILES)
-	#$(CC) -o server_demo $(CFLAGS) $(OFILES) $(LIBES)
-	gcc -o server_demo server_demo.c util.c
+	$(CC) -o server_demo $(CFLAGS) $(OFILES) $(LIBES)
+	#gcc -o server_demo server_demo.c util.c
 
 server_demo.o: server_demo.c $(HFILES)
 	$(CC) $(CFLAGS) -c server_demo.c
