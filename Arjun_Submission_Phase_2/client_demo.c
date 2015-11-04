@@ -1,31 +1,75 @@
-
-/*
- * demo client
- * It provides an associative memory for strings
- * strings are named with an assignment, e.g.,
- * a=mary had a little lamb
- * They are retrieved by used of their name prepended by a '$' character
- * presented to the prompt ('>'), e.g.,
- * >$a
- * mary had a little lamb
- * >
- *
- * The client passes the strings input to a server, the IP address of
- * which is specified on the command line, e.g..
- * $ client_demo 127.0.0.1
- * The server stores the assigned values into an internal
- * data structure, which it makes persistent using a file.
- *
- * There's a certain amount of overhead in using stdio and
- * sockets, particularly buffer management with fflush() and so forth.
- */
-
 #include "demo.h"
+
+//This is temporary.  Must be abstracted out.
+const char* encrypt(char*str)
+{
+  int n=0;
+  char *p=str,
+     q[MAXSIZE];
+
+  while(*p)
+  {
+   if(islower(*p))
+   {
+     if((*p>='a')&&(*p<'x'))
+       q[n]=toupper(*p + (char)3);
+     else if(*p == ' ')
+        q[n] = ' ';
+     else if(*p=='x')
+       q[n]='A';
+     else if(*p=='y')
+       q[n]='B';
+     else
+       q[n]='C';
+   }
+   else
+   {
+     q[n]=*p;
+   }
+   n++; p++;
+  }
+  q[n++]='\0';
+  return q;
+}
+
+const char* decrypt(char*str)
+{
+  int   n=0;
+  char *p=str,
+     q[MAXSIZE];
+
+  while(*p)
+  {
+   if(isupper(*p))
+   {
+     if((*p>='D')&&(*p<='Z'))
+       q[n]=tolower(*p - (char)3);
+     else if(*p==' ')
+        q[n]=' ';
+     else if(*p=='A')
+       q[n]='x';
+     else if(*p=='B')
+       q[n]='y';
+     else
+       q[n]='z';
+   }
+   else
+   {
+     q[n]=*p;
+   }
+   n++; p++;
+  }
+  q[n++]='\0';
+  return q;
+}
+
+
 
 int
 main( int argc, char *argv[] )
 {
   char buf[BUFSIZE];
+  char *result;
   int sockfd;
   struct sockaddr_in servaddr;
   FILE *server_request, *server_reply;
@@ -83,23 +127,29 @@ main( int argc, char *argv[] )
    * the user, as appropriate. Lots of opportunity to generalize
    * this primitive user interface...
    */
+  fprintf(stderr,"%s","Connected to Drone!\n");
   if( fgets( buf, BUFSIZE, server_reply ) == NULL ) {
         perror( "read failure from associative memory at server");
   }
-  fprintf(stderr,"%s",buf);
+  result = decrypt(buf);
+  fprintf(stderr, "%s", result);
   
   for( putchar('>'); (fgets( buf, BUFSIZE, stdin ) != NULL ); putchar('>')) {
-    if( fputs( buf, server_request ) == EOF ) {
+
+    
+    if( fputs( encrypt(buf), server_request ) == EOF ) {
       perror( "write failure to associative memory at server" );
     }
-
+    
     fflush( server_request );  /* buffering everywhere.... */
     
     if( fgets( buf, BUFSIZE, server_reply ) == NULL ) {
         perror( "read failure from associative memory at server");
     }
-    decypt(buff)
-    fprintf(stderr,"%s",buf);
+    
+    result = decrypt(buf);
+    fprintf(stderr,"%s", result );
+    
   }
   /* shut things down */
   fclose( server_request );
