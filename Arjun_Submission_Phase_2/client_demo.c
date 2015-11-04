@@ -9,24 +9,23 @@ const char* encrypt(char*str)
 
   while(*p)
   {
-   if(islower(*p))
-   {
-     if((*p>='a')&&(*p<'x'))
-       q[n]=toupper(*p + (char)3);
-     else if(*p == ' ')
-        q[n] = ' ';
-     else if(*p=='x')
-       q[n]='A';
-     else if(*p=='y')
-       q[n]='B';
-     else
-       q[n]='C';
+   int ascii = (int)(*p);
+   
+   if(ascii <= 125 && ascii >= 33) {
+    ascii = ascii + 3;
+
+    //bounds check
+    if(ascii > 125) {
+      ascii = 33 + (ascii - 126);
+    }
+    q[n]= (char) ascii;
    }
-   else
-   {
-     q[n]=*p;
+   else {
+    return "~";
+    //error
    }
-   n++; p++;
+   n++;
+   p++;
   }
   q[n++]='\0';
   return q;
@@ -40,24 +39,21 @@ const char* decrypt(char*str)
 
   while(*p)
   {
-   if(isupper(*p))
-   {
-     if((*p>='D')&&(*p<='Z'))
-       q[n]=tolower(*p - (char)3);
-     else if(*p==' ')
-        q[n]=' ';
-     else if(*p=='A')
-       q[n]='x';
-     else if(*p=='B')
-       q[n]='y';
-     else
-       q[n]='z';
+   int ascii = (int)(*p);
+   if(ascii <= 125 && ascii >= 33) {
+    ascii = ascii - 3;
+
+    //bounds check
+    if(ascii < 33) {
+      ascii = 126 - (33 - ascii);
+    }
+    q[n]= (char) ascii;
    }
-   else
-   {
-     q[n]=*p;
+   else {
+    return "~";
    }
-   n++; p++;
+   n++;
+   p++;
   }
   q[n++]='\0';
   return q;

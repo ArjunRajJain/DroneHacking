@@ -20,7 +20,7 @@ const char* encrypt(char*str)
     q[n]= (char) ascii;
    }
    else {
-    return "~"
+    return "~";
     //error
    }
    n++;
@@ -49,7 +49,7 @@ const char* decrypt(char*str)
     q[n]= (char) ascii;
    }
    else {
-    return "~"
+    return "~";
    }
    n++;
    p++;
@@ -133,7 +133,8 @@ void service( int fd ) {
     fprintf(stderr,"%s",buf);
     char *result = decrypt(buf);
     fprintf(stderr,"%s",result);
-    if(strcmp(result, '~')) {
+
+    if(strcmp(result, "~")) {
       fputs( encrypt("Invalid Character"), client_reply );
       fflush( client_reply );
     }
