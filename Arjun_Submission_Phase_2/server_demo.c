@@ -10,12 +10,12 @@ const char* encrypt(char*str)
   {
    int ascii = (int)(*p);
    
-   if(ascii <= 125 && ascii >= 33) {
+   if(ascii <= 125 && ascii >= 32) {
     ascii = ascii + 3;
 
     //bounds check
     if(ascii > 125) {
-      ascii = 33 + (ascii - 126);
+      ascii = 32 + (ascii - 126);
     }
     q[n]= (char) ascii;
    }
@@ -39,12 +39,12 @@ const char* decrypt(char*str)
   while(*p)
   {
    int ascii = (int)(*p);
-   if(ascii <= 125 && ascii >= 33) {
+   if(ascii <= 125 && ascii >= 32) {
     ascii = ascii - 3;
 
     //bounds check
-    if(ascii < 33) {
-      ascii = 126 - (33 - ascii);
+    if(ascii < 32) {
+      ascii = 126 - (32 - ascii);
     }
     q[n]= (char) ascii;
    }
