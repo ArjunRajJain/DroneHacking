@@ -22,6 +22,67 @@
 
 #include "demo.h"
 
+//This is temporary.  Must be abstracted out.
+char* encrypt(char*str)
+{
+	int n=0;
+	char *p=str,
+		 q[MAXSIZE];
+
+	while(*p)
+	{
+	 if(islower(*p))
+	 {
+		 if((*p>='a')&&(*p<'x'))
+			 q[n]=toupper(*p + (char)3);
+		 else if(*p=='x')
+			 q[n]='A';
+		 else if(*p=='y')
+			 q[n]='B';
+		 else
+			 q[n]='C';
+	 }
+	 else
+	 {
+		 q[n]=*p;
+	 }
+	 n++; p++;
+	}
+	q[n++]='\0';
+	return q;
+}
+
+char* decrypt(char*str)
+{
+	int   n=0;
+	char *p=str,
+		 q[MAXSIZE];
+
+	while(*p)
+	{
+	 if(isupper(*p))
+	 {
+		 if((*p>='D')&&(*p<='Z'))
+			 q[n]=tolower(*p - (char)3);
+		 else if(*p=='A')
+			 q[n]='x';
+		 else if(*p=='B')
+			 q[n]='y';
+		 else
+			 q[n]='z';
+	 }
+	 else
+	 {
+		 q[n]=*p;
+	 }
+	 n++; p++;
+	}
+	q[n++]='\0';
+	return q;
+}
+
+
+
 int
 main( int argc, char *argv[] )
 {
@@ -89,15 +150,19 @@ main( int argc, char *argv[] )
   fprintf(stderr,"%s",buf);
   
   for( putchar('>'); (fgets( buf, BUFSIZE, stdin ) != NULL ); putchar('>')) {
-    if( fputs( buf, server_request ) == EOF ) {
+
+    
+    if( fputs( encrypt(buf), server_request ) == EOF ) {
       perror( "write failure to associative memory at server" );
     }
+    
     fflush( server_request );  /* buffering everywhere.... */
     
     if( fgets( buf, BUFSIZE, server_reply ) == NULL ) {
         perror( "read failure from associative memory at server");
     }
-    fprintf(stderr,"%s",buf);
+    
+    fprintf(stderr,"%s", decrypt(buf) );
   }
   /* shut things down */
   fclose( server_request );
