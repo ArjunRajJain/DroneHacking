@@ -5,7 +5,7 @@
 
 #define PROMPT '>'
 #define DOLLAR '$'
-#define EQUALS '='
+#define EQUALS '~'
 #define NEWLINE '\n'
 #define EOS '\0'
 
