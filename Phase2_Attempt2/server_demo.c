@@ -1,65 +1,66 @@
 #include "demo.h"
 
-char* encrypt(char*str)
-{
-  int n=0;
-  char *p=str,
-     q[MAXSIZE];
+char *encrypt(char *src) {
+    
+    int len = strlen(src);
+    int i = 0;
+    int ch = 0;
+    int key = 3;
+    char q[1024]= " ";
 
-  while(*p)
-  {
-   if(islower(*p))
-   {
-     if((*p>='a')&&(*p<'x'))
-       q[n]=toupper(*p + (char)3);
-     else if(*p == ' ')
-        q[n] = ' ';
-     else if(*p=='x')
-       q[n]='A';
-     else if(*p=='y')
-       q[n]='B';
-     else
-       q[n]='C';
-   }
-   else
-   {
-     q[n]=*p;
-   }
-   n++; p++;
-  }
-  q[n++]='\0';
-  return q;
+    /* Loop over each char in src */
+    for (i = 0; i < len; i++) {
+        ch = (int)src[i]; /* Convert the char to int */
+        
+        if (ch >= 33 && ch <= 125) {
+            ch += key;
+            //printf("Now the key is%d\n", ch);
+            if (ch > 125) ch -= 93;
+            if (ch < 33) ch += 93;
+            q[i] = (char)ch;
+        } else if (ch == 32) {
+            // this is the space
+            // this is going to be encrypted as a space itself
+            q[i] = (char)ch;
+        } else if (ch == 10) {
+            q[i] = (char)ch;
+        }
+        
+    }
+    
+    q[i] = '\0';
+    return q;
 }
 
-char* decrypt(char*str)
-{
-  int   n=0;
-  char *p=str,
-     q[MAXSIZE];
+char *decrypt(char *src) {
+   
+    int len = strlen(src);
+    int i = 0;
+    int ch = 0;
+    int key = 3;
+    char q[1024] = " ";
 
-  while(*p)
-  {
-   if(isupper(*p))
-   {
-     if((*p>='D')&&(*p<='Z'))
-       q[n]=tolower(*p - (char)3);
-     else if(*p == ' ')
-        q[n] = ' ';
-     else if(*p=='A')
-       q[n]='x';
-     else if(*p=='B')
-       q[n]='y';
-     else
-       q[n]='z';
-   }
-   else
-   {
-     q[n]=*p;
-   }
-   n++; p++;
-  }
-  q[n++]='\0';
-  return q;
+    /* Loop over each char in src */
+    for (i = 0; i < len; i++) {
+        ch = (int)src[i]; /* Convert the char to int */
+        
+        if (ch >= 33 && ch <= 125) {
+            ch -= key;
+            if (ch > 125) ch -= 93;
+            if (ch < 33) ch += 93;
+            q[i] = (char)ch;
+        } else if (ch == 32) {
+            // this is the space
+            // this is going to be encrypted as a space itself
+            q[i] = (char)ch;
+        } else if (ch == 10) {
+            q[i] = (char)ch;
+        }
+       
+    }
+    
+    q[i] = '\0';
+    return q;
 }
 
 typedef enum { false, true } bool;
@@ -137,8 +138,7 @@ void service( int fd ) {
     fprintf(stderr,"%s",buf);
     char *result = decrypt(buf);
     fprintf(stderr,"%s",result);
-    fprintf(stderr,"%s",buf);
-
+    fprintf(stderr, "\n");
   
       if(inChoosingOptions) {
         if ((ptr = find_1( result )) != (char *) NULL) {
