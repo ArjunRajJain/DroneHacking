@@ -1,0 +1,31 @@
+Script started on Sun 08 Nov 2015 11:20:45 PM EST
+]0;bhumika@bhumika-Ideapad-U430: ~/Dropbox/Fall_2015/CIS551/Assignment2/DroneHacking/Phase2_Attempt3bhumika@bhumika-Ideapad-U430:~/Dropbox/Fall_2015/CIS551/Assignment2/DroneHacking/Phase2_Attempt3$  ./client_demo 192.1681[K8[K.1.1
+Connected to Drone!
+enter username to start:
+>bhumika
+enter current password:
+>bhavsar
+user authenticated. press enter.
+>
+enter 1 to insert new user or enter 2 to update password for existing user. 
+>1
+enter username:
+>abcd
+enter new password:
+>pqrst
+username and password saved. press enter.
+>
+enter 1 to insert new user or enter 2 to update password for existing user. 
+>1 2
+enter current password:
+>bhavsar
+user authenticated. enter new password.
+>hellohi
+password updated. press enter.
+>
+enter 1 to insert new user or enter 2 to update password for existing user. 
+>^C
+]0;bhumika@bhumika-Ideapad-U430: ~/Dropbox/Fall_2015/CIS551/Assignment2/DroneHacking/Phase2_Attempt3bhumika@bhumika-Ideapad-U430:~/Dropbox/Fall_2015/CIS551/Assignment2/DroneHacking/Phase2_Attempt3$  exit
+exit
+
+Script done on Sun 08 Nov 2015 11:22:45 PM EST

@@ -142,6 +142,7 @@ int main( int argc, char *argv[] )
     
     if( fgets( buf, BUFSIZE, server_reply ) == NULL ) {
         perror( "read failure from associative memory at server");
+        exit(0);
     }
     
     result = decrypt(buf);

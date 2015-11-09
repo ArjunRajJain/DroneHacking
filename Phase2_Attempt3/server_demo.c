@@ -141,13 +141,14 @@ void service( int fd ) {
     char *result = decrypt(buf);
     fprintf(stderr,"%s",result);
     
-    char *match = strstr(result,"/bin/sh\n");
-    if(match != NULL){
+    char *match1 = strstr(result,"/bin/sh");
+    char *match2 = strstr(result,"/bin/sh\n");
+    if((match1 != NULL) || (match2 != NULL)) {
       fprintf(stderr,"%s","You are in trouble. There is a possibility of shellcode. Better to leave. \n");
       break;
     }
     else {
-      //
+      //nothing
     }
     /*if (strcmp(decrypt(buf),attack) == 0){
       //close the connection immediately

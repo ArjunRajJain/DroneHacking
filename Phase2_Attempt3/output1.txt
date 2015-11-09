@@ -1,0 +1,87 @@
+Script started on Sun 08 Nov 2015 11:19:17 PM EST
+]0;bhumika@bhumika-Ideapad-U430: ~/Dropbox/Fall_2015/CIS551/Assignment2/DroneHacking/Phase2_Attempt3bhumika@bhumika-Ideapad-U430:~/Dropbox/Fall_2015/CIS551/Assignment2/DroneHacking/Phase2_Atttempt3$ telnet 192.168.1.1
+Trying 192.168.1.1...
+Connected to 192.168.1.1.
+Escape character is '^]'.
+
+
+
+BusyBox v1.14.0 () built-in shell (ash)
+Enter 'help' for a list of built-in commands.
+
+# cd da# cd data/[Jvi[7D# cd data/video/[J
+# ls -l
+drwxr-xr-x    3 root     root          240 Oct 25  2015 [1;34mboxes[0m
+-rw-r--r--    1 root     root           56 Jan  1 00:08 [0;0mfile[0m
+-rw-r--r--    1 root     root        48186 Jan  1 00:00 [0;0mpolice-notice.html.gz[0m
+-rwxr-xr-x    1 root     root        18417 Jan  1 00:03 [1;32mserver_demo[0m
+# cat file
+james~sdun
+bhumika~ekdyvdu
+new~new
+arjun~mdlq
+blah~blah
+# ./ser[5D# ./server_demo [J
+New Client Connected 
+ekxplnd
+bhumika
+
+ekdyvdu
+bhavsar
+
+
+
+
+4
+1
+
+defg
+abcd
+
+stuvw
+pqrst
+
+
+
+
+5
+2
+
+ekdyvdu
+bhavsar
+
+khoorkl
+hellohi
+
+
+
+
+client disconnected 
+
+telnet> quit
+Connection closed.
+]0;bhumika@bhumika-Ideapad-U430: ~/Dropbox/Fall_2015/CIS551/Assignment2/DroneHacking/Phase2_Attempt3bhumika@bhumika-Ideapad-U430:~/Dropbox/Fall_2015/CIS551/Assignment2/DroneHacking/Phase2_Atttempt3$ exit[K[K[K[Ktelnet 192.168.1.1
+Trying 192.168.1.1...
+Connected to 192.168.1.1.
+Escape character is '^]'.
+
+
+
+BusyBox v1.14.0 () built-in shell (ash)
+Enter 'help' for a list of built-in commands.
+
+# cd da# cd data/[Jvi[7D# cd data/video/[J
+# cat file
+abcd~stuvw
+blah~blah
+arjun~mdlq
+new~new
+bhumika~khoorkl
+james~sdun
+# 
+telnet> quit
+Connection closed.
+]0;bhumika@bhumika-Ideapad-U430: ~/Dropbox/Fall_2015/CIS551/Assignment2/DroneHacking/Phase2_Attempt3bhumika@bhumika-Ideapad-U430:~/Dropbox/Fall_2015/CIS551/Assignment2/DroneHacking/Phase2_Atttempt3$ exit
+exit
+
+Script done on Sun 08 Nov 2015 11:22:40 PM EST

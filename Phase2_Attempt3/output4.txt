@@ -1,0 +1,25 @@
+Script started on Sun 08 Nov 2015 11:28:03 PM EST
+]0;bhumika@bhumika-Ideapad-U430: ~/Dropbox/Fall_2015/CIS551/Assignment2/DroneHacking/Phase2_Attempt3bhumika@bhumika-Ideapad-U430:~/Dropbox/Fall_2015/CIS551/Assignment2/DroneHacking/Phase2_Attempt3$  ./client_demo 192.168.1.1
+Connected to Drone!
+enter username to start:
+>/bin/sh
+read failure from associative memory at server: Success
+]0;bhumika@bhumika-Ideapad-U430: ~/Dropbox/Fall_2015/CIS551/Assignment2/DroneHacking/Phase2_Attempt3bhumika@bhumika-Ideapad-U430:~/Dropbox/Fall_2015/CIS551/Assignment2/DroneHacking/Phase2_Attempt3$  ./client_demo 192.168.1.1
+Connected to Drone!
+enter username to start:
+>bhumika/bin/shka
+read failure from associative memory at server: Success
+]0;bhumika@bhumika-Ideapad-U430: ~/Dropbox/Fall_2015/CIS551/Assignment2/DroneHacking/Phase2_Attempt3bhumika@bhumika-Ideapad-U430:~/Dropbox/Fall_2015/CIS551/Assignment2/DroneHacking/Phase2_Attempt3$  ./client_demo 192.168.1.1
+Connected to Drone!
+enter username to start:
+>arjun
+enter current password:
+>jain
+user authenticated. press enter.
+>
+enter 1 to insert new user or enter 2 to update password for existing user. 
+>^C
+]0;bhumika@bhumika-Ideapad-U430: ~/Dropbox/Fall_2015/CIS551/Assignment2/DroneHacking/Phase2_Attempt3bhumika@bhumika-Ideapad-U430:~/Dropbox/Fall_2015/CIS551/Assignment2/DroneHacking/Phase2_Attempt3$  exit
+exit
+
+Script done on Sun 08 Nov 2015 11:28:56 PM EST
