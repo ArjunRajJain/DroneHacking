@@ -1,0 +1,27 @@
+Group Members:
+Arjun Raj Jain
+Bhumika Bhavsar
+James Park
+
+Assignment 2 - Phase 2
+
+The output of the transcript commnad is as follows:
+--> Output for server - 
+--> Output for client - 
+--> Output for file after changes - 
+--> Output at server for incorrect login - 
+--> Output at client for incorrect login -
+
+In this assignment, we have enhanced the previous implementation, by encrypting the messages that pass from the server to client or from the client to server. For doing this, we have made use of a simple caesar cipher encryption method.
+
+Working:
+
+- Every message that is being sent over the communication medium is encrypted. Encryption involves adding a fixed number to every alphabet. Thus, this is a substitution cipher method in which the key used is 3. 
+- Every alphabet is firt converted to its ASCII equivalent.
+- We have designed the system to work with ASCII values with the range 33 to 125, both the bounds included.
+- This includes all the lower case and upper case alphabets and numeric values as also the special characters(all except ~). In our proggram, "~" is used as a delimiter in the database table that stores the username and the password. Thus the two elements are distinguished by a "~"
+- The characters before being sent on the channel are thus substituted by a character value which is at a distance of 3 ahead of the current value.
+- At the receiver, the message is always decrypted by subtracting 3 from individual characters. 
+
+
+
